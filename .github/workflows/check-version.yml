@@ -1,0 +1,27 @@
+name: Monitor shadcn-ui react-day-picker Version
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Runs daily at midnight UTC
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch shadcn-ui package.json
+        run: curl -s https://raw.githubusercontent.com/shadcn-ui/ui/main/apps/www/package.json -o remote-package.json
+
+      - name: Check version and notify
+        run: |
+          VERSION=$(jq -r '.dependencies."react-day-picker"' remote-package.json)
+          EXPECTED_VERSION="^8.7.1"
+          echo "Current react-day-picker version in shadcn-ui: $VERSION"
+          echo "Expected version: $EXPECTED_VERSION"
+
+          if [ "$VERSION" != "$EXPECTED_VERSION" ]; then
+            echo "::warning::Version mismatch! shadcn-ui react-day-picker version is $VERSION (expected $EXPECTED_VERSION)"
+            exit 1
+          else
+            echo "::notice::Version matches expected version: $VERSION"
+          fi
