@@ -2,7 +2,7 @@ name: Monitor shadcn-ui react-day-picker Version
 
 on:
   schedule:
-    - cron: "0 0 * * *" # Runs daily at midnight UTC
+    - cron: "0 0 * * 1-5" # Runs Monday-Friday at midnight UTC
   workflow_dispatch: # Allow manual trigger
 
 jobs:
